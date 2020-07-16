@@ -16,8 +16,8 @@ from kazoo.handlers.threading import KazooTimeoutError
 from hbase import exceptions
 from hbase import protobuf as pb
 
-PATH_MASTER = '/hbase/master'
-PATH_META_REGION = '/hbase/meta-region-server'
+PATH_MASTER = '/shopee-hbase/master'
+PATH_META_REGION = '/shopee-hbase/meta-region-server'
 
 
 def get_master(zkquorum, timeout=9, retries=3):
