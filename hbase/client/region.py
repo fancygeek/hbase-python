@@ -217,8 +217,11 @@ class RegionManager(object):
 
     @staticmethod
     def _make_meta_key(table, key):
+        temp = table
+        if table and table.startswith('default:'):
+            temp = table.replace('default:', '')
         buffer = io.StringIO()
-        buffer.write(table)
+        buffer.write(temp)
         buffer.write(',')
         buffer.write(key)
         buffer.write(',:')
