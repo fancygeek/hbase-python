@@ -69,7 +69,7 @@ class Threads(object):
 
 class Connection(object):
 
-    def __init__(self, on_close, zkquorum):
+    def __init__(self, on_close, zkquorum, zkroot=None):
         """Connection.
 
         Args:
@@ -86,7 +86,7 @@ class Connection(object):
         self._on_close = on_close
         self._zkquorum = zkquorum
 
-        self._client = client.Client(zkquorum)
+        self._client = client.Client(zkquorum, zkroot)
         self._namespaces = dict()
 
         self._threads = Threads(conf.num_threads_per_conn, conf.num_tasks_per_conn)
@@ -232,7 +232,7 @@ class Connection(object):
 
 class ConnectionPool(object):
 
-    def __init__(self, zkquorum, max_size=10):
+    def __init__(self, zkquorum, zkroot=None, max_size=10):
         """Connection pool.
 
         Args:
@@ -242,6 +242,7 @@ class ConnectionPool(object):
 
         """
         self._zkquorum = zkquorum
+        self._zkroot = zkroot
         self._max_size = max_size
         self._conns = collections.deque()
 
@@ -255,7 +256,7 @@ class ConnectionPool(object):
         if len(self._conns) > 0:
             return self._conns.pop(0)
         else:
-            return Connection(self._on_conn_close, self._zkquorum)
+            return Connection(self._on_conn_close, self._zkquorum, self._zkroot)
 
     def _on_conn_close(self, conn):
         """Callback when connection close.

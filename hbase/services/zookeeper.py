@@ -16,11 +16,11 @@ from kazoo.handlers.threading import KazooTimeoutError
 from hbase import exceptions
 from hbase import protobuf as pb
 
-PATH_MASTER = '/shopee-hbase/master'
-PATH_META_REGION = '/shopee-hbase/meta-region-server'
+PATH_MASTER = '/master'
+PATH_META_REGION = '/meta-region-server'
 
 
-def get_master(zkquorum, timeout=9, retries=3):
+def get_master(zkquorum, zkroot = None, timeout=9, retries=3):
     """Get master server address.
 
     Args:
@@ -37,10 +37,15 @@ def get_master(zkquorum, timeout=9, retries=3):
         exceptions.ZookeeperProtocolError: Invalid response.
 
     """
-    return _get_address(zkquorum, PATH_MASTER, timeout, retries)
+    path = None
+    if zkroot:
+        path = zkroot + PATH_MASTER
+    else:
+        path = '/hbase' + PATH_MASTER
+    return _get_address(zkquorum, path, timeout, retries)
 
 
-def get_region(zkquorum, timeout=9, retries=3):
+def get_region(zkquorum, zkroot=None, timeout=9, retries=3):
     """Get meta region server address.
 
     Args:
@@ -57,7 +62,12 @@ def get_region(zkquorum, timeout=9, retries=3):
         exceptions.ZookeeperProtocolError: Invalid response.
 
     """
-    return _get_address(zkquorum, PATH_META_REGION, timeout, retries)
+    path = None
+    if zkroot:
+        path = zkroot + PATH_META_REGION
+    else:
+        path = '/hbase' + PATH_META_REGION
+    return _get_address(zkquorum, path, timeout, retries)
 
 
 def _get_address(zkquorum, path, timeout=9, retries=3):
