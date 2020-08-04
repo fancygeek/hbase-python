@@ -10,6 +10,7 @@ import socket
 import struct
 import sys
 import threading
+import getpass
 
 from hbase import exceptions
 from hbase import protobuf as pb
@@ -130,7 +131,7 @@ class Request(object):
             )
 
         header = pb.ConnectionHeader()
-        header.user_info.effective_user = 'hbase-python'
+        header.user_info.effective_user = getpass.getuser()
         header.service_name = self._service_name
         header_bytes = header.SerializeToString()
 
