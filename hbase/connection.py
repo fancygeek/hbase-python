@@ -153,13 +153,13 @@ class Connection(object):
         if name in self._namespaces:
             return self._namespaces[name]
 
-        try:
-            self._client.namespace(name)
-        except NamespaceNotFoundError as e:
-            if create_if_not_exists:
-                self._client.create_namespace(name)
-            else:
-                raise e
+#         try:
+#             self._client.namespace(name)
+#         except NamespaceNotFoundError as e:
+#             if create_if_not_exists:
+#                 self._client.create_namespace(name)
+#             else:
+#                 raise e
 
         ns = Namespace(self, name)
         self._namespaces[name] = ns
